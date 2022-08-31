@@ -1,0 +1,254 @@
+\documentclass[reqno]{amsart}
+%\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb,enumerate}
+\usepackage{amsthm,stmaryrd}
+\usepackage[all]{xy}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{scrextend}
+\usepackage{apacite}
+\usetikzlibrary{shapes.geometric}
+
+\setlength{\textwidth}{5.5in}
+
+
+\theoremstyle{definition}
+\newtheorem{lem}{Lemma}
+\newtheorem{cor}[lem]{Corollary}
+\newtheorem{prop}[lem]{Proposition}
+\newtheorem{thm}[lem]{Theorem}
+\newtheorem{conj}[lem]{Conjecture}
+\newtheorem{intthm}{Theorem}
+\renewcommand{\theintthm}{\Alph{intthm}}
+
+\theoremstyle{definition}
+\newtheorem{defn}[lem]{Definition}
+\newtheorem{ex}[lem]{Example}
+\newtheorem{question}[lem]{Question}
+\newtheorem{questions}[lem]{Questions}
+\newtheorem{problem}[lem]{Problem}
+\newtheorem{disc}[lem]{Remark}
+\newtheorem{rmk}[lem]{Remark}
+\newtheorem{construction}[lem]{Construction}
+\newtheorem{notn}[lem]{Notation}
+\newtheorem{fact}[lem]{Fact}
+\newtheorem{para}[lem]{}
+\newtheorem{exer}[lem]{Exercise}
+\newtheorem{remarkdefinition}[lem]{Remark/Definition}
+\newtheorem{notation}[lem]{Notation}
+\newtheorem{step}{Step}
+\newtheorem{convention}[lem]{Convention}
+\newtheorem*{Convention}{Convention}
+\newtheorem{assumption}[lem]{Assumption}
+\newtheorem{rul}[lem]{Rule}
+\newtheorem{pseudocode}[lem]{Pseudo Code}
+\newtheorem{code}[lem]{Code}
+
+
+\begin{document}
+\noindent
+Alan Hahn
+\\8500 Project
+\vspace{7mm}
+\title{Refinements of the GB Criterion and Improvements of Buchberger's Algorithm}
+\maketitle
+
+
+
+\subsection{Introduction}\label{Intro} 
+Recall that there are many equivalent definitions of a Gr{\"o}bner basis; in order to talk about one of the definitions of interest used in this paper, it is useful to remind the reader of the definition of a syzygy polynomial:  
+
+\begin{defn} The syzygy polynomial of $f$ and $g$, $S(f,g)$ is defined as
+$$S(f,g) = \frac{lcm(LM(f),LM(g))}{LT(f)}\cdot f - \frac{lcm(LM(f),LM(g))}{LT(g)}\cdot g.$$
+\end{defn}
+With this in mind, recall this equivalent definition of a Gr{\"o}bner basis:
+\begin{defn}{(GB Criterion 1)}\label{gbc1}
+A basis $G = \{g_1,...,g_s\}$ for an ideal $I \subseteq k[x_1,...,x_n]$ is a Gr{\"o}bner basis for $I$ iff for all pairs $i\neq j$, rem$_G(S(g_i,g_j)) = 0$, where rem$_G(S(g_i,g_j))$ is the remainder of $S(g_i,g_j)$ under division by the ordered set $G = \{g_1,...,g_s\}$. 
+\end{defn}
+
+
+This definition is of interest as it lends itself to an algorithmic construction of a Gr{\"o}bner basis, given by Buchberger's Algorithm: 
+
+\begin{defn}{(Buchberger's Algorithm)}\label{BA}
+Let $0\neq I = \langle f_1,...,f_s\rangle$ be an ideal in $k[x_1,...,x_n]$. A Gr{\"o}bner basis for $I$ may be constructed as follows: 
+\\$G := \{f_1,...,f_s\}$
+\\For all $i\neq j$, if rem$_G(S(f_i,f_j)) = r \neq 0$, then $G := G\cup \{r\}$. 
+Restart with this new $G$, and do until all remainders are zero. 
+\end{defn}
+
+As \ref{BA} is an algorithm it is guaranteed to terminate; however, Buchberger's algorithm is relatively slow, with a major pitfall being that computing remainders is computationally expensive, so reducing the number of remainders rem$_G(S(f_i,f_j))$ which need to be checked would be advantageous. An easy observation to be made is that once a remainder for a pair rem$_G(S(f_i,f_j))$ has been seen to be zero, there is no reason to check again, as the remainder is still zero after adjoining new elements to $G$. Indeed, if new generators $f_j$ are added one at a time, the only remainders that need to be checked are  rem$_G(S(f_i,f_j))$, where $i \leq j - 1$. This improvement is somewhat superficial, and the goal of this paper is to describe some deeper improvements which may be made. 
+
+
+
+
+
+\subsection{Improvements to Buchberger's Algorithm} 
+The first improvement is fairly immediate following a definition and a bit of discussion. First, a definition: 
+
+\begin{defn}\label{stdrep}
+Fix a monomial order and let $G = \{g_1,...,g_t\} \subseteq k[x_1,...,x_n]$. Given $f\in k[x_1,...,x_n]$, we say that $f$ $\textbf{reduces to zero modulo $G$}$, written $$f\rightarrow_G 0,$$ if $f$ has a \textbf{standard representation} $$f = A_1g_1 + ... + A_tg_t\text{, }A_i\in k[x_1,...,x_n],$$ such that whenever $A_ig_i \neq 0$, then $$\text{multideg}(f)\geq \text{multideg}(A_ig_i).$$
+\end{defn}
+
+From this definition immediately follows a lemma: 
+
+ \begin{lem}\label{lem5}
+Let $G = (g_1,...,g_t)$ be an ordered set of elements of $k[x_1,...,x_n]$ and fix $f\in k[x_1,...,x_n]$. Then rem$_G(f)=0$ $\implies$ $f\rightarrow_G 0$. The converse is not true in general.
+\end{lem}
+\begin{proof}
+rem$_G(f)=0 \implies f = q_1g_1 + ... + q_tg_t + 0$ with $\text{multideg}(f)\geq \text{multideg}(q_ig_i)$ whenever $q_ig_i \neq 0$.
+\end{proof}
+
+The utility of this lemma in the context of this paper is that it gives rise to the following equivalent definition for a Gr{\"o}bner basis: 
+
+\begin{prop}{(GB Criterion 2)}\label{gbc2}
+A basis $G = \{g_1, ..., g_t\}$ for an ideal $I$ is a Gr{\"o}bner basis iff $S(g_i,g_j)\rightarrow_G 0$ for all $i\neq j$.
+\end{prop}
+\begin{proof}
+The forward implication is given by \ref{lem5}. The other implication is due to noting that in the proof of \ref{gbc1}, all that was used was that $S(g_i,g_j)$ has a standard representation which satisfies the conditions of definition \ref{stdrep}.
+\end{proof}
+
+For the details of the proof of \ref{gbc1}, see \cite{OsheaIVA}. With this discussion, an improvement to Buchberger's algorithm may be introduced: 
+
+\begin{prop}{(Improvement 1)}\label{prop1}
+Given a finite set $G\subseteq k[x_1,...,x_n]$, suppose that for $f,g\in G$, LM$(f)$ and LM$(g)$ are relatively prime. Then $S(f,g) \rightarrow_G 0$.
+\end{prop}
+\begin{proof}
+For simplicity, assume $f,g$ have been multiplied by appropriate constants to make LC$(f) =$ LC$(g) = 1.$ Write $f =$ LM$(f) + p$, $g =$ LM$(g) + q$. As LM$(f)$, LM$(g)$ are relatively prime, then lcm(LM$(f)$,LM$(g)$) = LM$(f)$LM$(g)$. Thus the S-polynomial S$(f,g)$ may be written
+$$S(f,g) = LM(g) f - LM(f) g
+\\ = (g-q) f - (f-p) g
+\\ = gf - qf - fg + pg
+\\ = pg - qf.$$
+It remains to note that $pg - qf$ is a standard representation which satisfies \ref{stdrep}.
+\end{proof}
+
+This is an improvement because for pairs $f_i,f_j$ of elements in a potential Gr{\"o}bner basis for a polynomial ideal, if LM$(f_i)$ and LM$(f_j)$ are relatively prime, then $S(f_i,f_j) \rightarrow_G 0$ and it is not necessary to do any polynomial divisions for this pair, thus reducing a series of polynomial divisions to a simple check of whether two monomials are relatively prime. 
+
+The next improvement requires a bit of theory; first a definition is in order. 
+
+\begin{defn}
+Let $F = (f_1,...,f_s)$. A \textbf{syzygy} on the leading terms $LT(f_1),...,LT(f_s)$ of $F$ is an $s$-tuple of polynomials $S = (h_1,...,h_s)\in (k[x_1,...,x_n])^s$ such that $$\sum_{i=1}^s h_i\cdot LT(f_i) = 0.$$
+Denote by $S(F)$ the subset of $(k[x_1,...,x_n])^s$ consisting of all syzygies on the leading terms of $F$. 
+\end{defn}
+
+As an example of a syzygy, consider the following: 
+\begin{ex}
+Consider $F = (x,x^2+z,y+z)$ with the lex ordering. Then $S = (-x+y,1,-x)$ defines a syzygy in $S(F)$: $$(-x+y)\cdot LT(x) + 1\cdot LT(x^2+z) + -x\cdot LT(y+z) = -x^2 +xy + x^2 -xy = 0.$$
+\end{ex}
+
+Note that $S(F)$ is closed under addition and multiplication in the sense that for syzygies $S = (s_1,...,s_t)$, $U = (u_1,...,u_t) \in S(F)$, then $S+U:=(s_1+u_1, ..., s_t+u_t)\in S(F)$, and for $g\in k[x_1,...,x_n]$, then $gS:=(gs_1,...,gs_t)\in S(F)$. In light of this it is not hard to see that, taking $e_i = (0,...,0,1,0,...,0)\in(k[x_1,...,x_n])^s$ where 1 is in the $i$th place, then a syzygy $S\in S(F)$ may be written $S = \sum_{i=1}^{s}h_ie_i.$ 
+
+From the discussion above, $\{e_i\}$ may be thought of as a basis for S(F) in some sense. While the $\{e_i\}$ are useful, for this paper it is useful to also look at some other elements of $S(F)$, namely homogeneous elements: 
+
+\begin{defn}
+An element $S\in S(F)$ is \textbf{homogeneous of multidegree} $\alpha$, where $\alpha \in \mathbb{Z}_{\geq0}$, provided that $$S = (c_1x^{\alpha(1)}, ..., c_sx^{\alpha(s)}),$$ where $c_i\in k$ and $\alpha(i) + multideg(f_i) = \alpha$ whenever $c_i\neq 0$. 
+\end{defn}
+
+As an example of a homogeneous element of $S(F)$, consider: 
+
+\begin{defn}\label{sij}
+$$S_{ij} : = \frac{lcm(LM(f_i),LM(f_j))}{LT(f_i)}\cdot \textbf{$e_i$} - \frac{lcm(LM(f_i),LM(f_j))}{LT(f_j)}\cdot \textbf{$e_j$}. $$ Note $S_{ij}$ is homogeneous of degree multideg$(lcm(LT(f_i),LT(f_j)))$.
+\end{defn}.
+
+Definition \ref{sij} may remind the reader of the syzygy polynomial of $f_i,f_j$, and for good reason. With the following definition, the connection between the two may be made. 
+
+\begin{defn}\label{sdotf}
+For $S = (H_1,...,H_s)\in S(F)$, 
+$$S\cdot F := \sum_{i = 1}^t H_if_i.$$
+\end{defn}
+
+With definition \ref{sdotf} in mind, it is clear to see that $S_{ij}\cdot F = S(f_i,f_j).$ An example may be helpful:
+
+\begin{ex}
+Consider $G = (x^2y^2+z,xy^2-y,x^2y+yz)$. Then
+\\$S_{1,2} = 1(1,0,0) - x(0,1,0) = (1,-x,0)$. 
+\\Note $S_{ij}\cdot G = 1(x^2y^2+z) - x(xy^2-y) = x^2y^2+z - x^2y^2+xy = xy + z = S(g_i,g_j).$
+\end{ex}
+
+Now, some main results: 
+
+\begin{lem}
+Every element of $S(F)$ can be written uniquely as a sum of homogeneous elements of $S(F)$. 
+\end{lem}
+
+\begin{proof}
+Fix $\alpha \in \mathbb{Z}_{\geq0}$, and let $h_{i\alpha}$ be the term of $h_i$ such that $h_{i\alpha}f_i$ has multidegree $\alpha$, if such term exists. Then $\sum_{i=1}^s h_{i\alpha}LT(f_i) = 0$ as $h_{i\alpha}LT(f_i)$ are the terms of multidegree $\alpha$ in the sum $\sum_{i=1}^s h_{i}LT(f_i) = 0$.
+\\Thus $S_{\alpha} = (h_{1\alpha}, ..., h_{s\alpha})$ is a homogeneous element of $S(F)$ of degree $\alpha$ and $S = \sum_{\alpha}S_{\alpha}$.
+\end{proof}
+
+Thus $S(F)$ has a basis of homogeneous elements. In particular, $\{S_{ij}\}$ is such a homogeneous basis: 
+
+\begin{prop}\label{proplem}
+Given $F = (f_1, ..., f_s)$, every syzygy $S\in S(F)$ can be written as 
+$$S = \sum_{i<j}u_{ij}S_{ij},$$
+where $u_{ij}\in k[x_1,...,x_n]$. 
+\end{prop}
+
+
+Proposition \ref{proplem} leads to another equivalent definition of a Gr{\"o}bner basis, which in turn is what is needed in order to state the second improvement to Buchberger's algorithm:
+
+\begin{prop}{(GB Criterion 3)}\label{gbc3}
+A basis $G = (g_1, ..., g_t)$ for an ideal $I$ is a Gr{\"o}bner basis iff for every element $S = (H_1,...,H_t)$ in a homogeneous basis for the syzygies $S(G)$, $S\cdot G \rightarrow_G 0.$ 
+\end{prop}
+
+For proofs of \ref{gbc3} and \ref{proplem}, see \cite{OsheaIVA}. Now, the second improvement to Buchberger's algorithm may be stated: 
+
+\begin{prop}{(Improvement 2)}\label{prop2}
+Given $G = (g_1,...,g_t)$, suppose that $S\subseteq \{S_{ij}\mid 1\leq i<j\leq t\}$ is a basis of $S(G)$. In addition, suppose we have distinct elements $g_i, g_j, g_l\in G$ such that $LT(g_l)$ divides $lcm(LT(g_i),LT(g_j))$. If $S_{il}, S_{jl}\in S$, then $S\setminus \{S_{ij}\}$ is also a basis of S$(G)$. 
+\end{prop}
+\begin{proof}
+For simplicity, suppose $i<j<l$. Set $x^{\gamma_{ij}} = lcm(LM(g_i),LM(g_j))$, and let $x^{\gamma_{il}}$ and $x^{\gamma_{jl}}$ be defined similarly. Then by assumption, $x^{\gamma_{il}}$, $x^{\gamma_{jl}}$ both divide $x^{\gamma_{ij}}$. It remains to note that $$ S_{ij} = \frac{x^{\gamma_{ij}}}{x^{\gamma_{il}}}S_{il} - \frac{x^{\gamma_{ij}}}{x^{\gamma_{jl}}}S_{jl}.$$
+\end{proof}
+
+Similar to proposition \ref{prop1}, proposition \ref{prop2} is an improvement to Buchberger's algorithm by further reducing the number of computations which need to be done. Taking $\{S_{ij}\}$ as a basis for the syzygies $S(G)$ for a potential Gr{\"o}bner basis $G$, then by proposition \ref{gbc3}, $S_{ij}\cdot G \rightarrow_G 0$ must be checked for each $S_{ij}$; proposition \ref{prop2} allows the removal of some unneeded elements in the basis so that they won't needlessly be checked. 
+
+
+
+\subsection{Summary and Conclusion}
+
+Recall that the first definition for a Gr{\"o}bner basis given in this paper, \ref{gbc1}, lends itself to an algorithm, namely Buchberger's algorithm, \ref{BA}. Also, recall that for Buchberger's algorithm, rem$_G(S(f_i,f_j))$ is computed for each pair $f_i,f_j$ in a potential Gr{\"o}bner basis and that polynomial division is computationally expensive. In trying to reduce the number of polynomial divisions executed, some theory was developed which circumvents the need to calculate a remainder for every pair. The first result, \ref{prop1} is based on \ref{gbc2}, a second, equivalent definition for a Gr{\"o}bner basis where the condition that rem$_G(S(f_i,f_j))$ = 0 for all $f_i,f_j$ was updated to $S(f_i,f_j) \rightarrow_G 0$. This first result is used to reduce the number of polynomial divisions by instead checking a condition about the elements of a potential Gr{\"o}bner basis, namely, checking whether LM$(f_i)$ and LM$(f_j)$ are relatively prime, as this then implies that $S(f_i,f_j) \rightarrow_G 0$. The second result, \ref{prop2} is based on a third equivalent definition of a Gr{\"o}bner basis, \ref{gbc3} where the condition $S(f_i,f_j) \rightarrow_G 0$ for all $f_i,f_j$ was updated to $S\cdot G \rightarrow_G 0$ for every element $S$ of a homogeneous basis for $S(G)$. This second result is used to reduce the number of polynomial divisions by instead checking a condition about elements of a homogeneous basis for $S(G)$ for a potential Gr{\"o}bner basis $G$, to see whether any elements may be excluded from consideration. To see how these two results may be used together, it is useful to note that the third equivalent definition for a Gr{\"o}bner basis, proposition \ref{gbc3}, is a generalization of the second, proposition \ref{gbc2}, as taking $\{S_{ij}\}$ as the homogeneous basis in \ref{gbc3} gives that the condition to check is $S_{ij}\cdot G \rightarrow_G 0$, which is exactly the condition to check in \ref{gbc2}. Putting all of this together gives the main result of this paper, a more efficient version of Buchberger's algorithm: 
+
+\newpage
+\begin{thm}
+Let I = $\langle f_1, ..., f_s\rangle$ be a polynomial ideal. Then a Gr{\"o}bner basis of $I$ can be constructed in a finite number of steps by the following algorithm: 
+\\Input: $F = (f_1, ..., f_s)$
+\\Output: a Gr{\"o}bner basis $G$ for $I = \langle f_1, ..., f_s\rangle$
+\vspace{2mm}
+\\$B := \{(i,j)\mid 1\leq i < j\leq s\}$
+\\$G:= F$
+\\$t := s$
+\\While $B\neq \emptyset$ Do
+\\\hspace*{10mm} Select $(i,j)\in B$
+\\\hspace*{10mm} If $lcm(LT(f_i),LT(f_j)) \neq LT(f_i)LT(f_j)$ And Criterion($f_i,f_j,B$) = false Then
+\\\hspace*{15mm} $r$ := rem$_G(S(f_i,f_j))$
+\\\hspace*{15mm} If $r\neq 0$ Then 
+\\\hspace*{21mm} $t := t+1; f_t := r$
+\\\hspace*{20mm} $G := G \cup \{f_t \}$
+\\\hspace*{20mm} $B := B \cup \{(i,t)\mid1\leq i \leq t-1\}$
+\\\hspace*{10mm} $B := B\setminus \{(i,j)\}$
+\\Return $G$
+\vspace*{2mm}
+\\Criterion($f_i,f_j,B$) is true provided that there is some $l\notin \{i,j\}$ for which the pairs $(i,l)$ and $(j,l)$ are not in B and $LT(f_l)$ divides $lcm(LT(f_i),LT(f_j))$. This is based on proposition \ref{prop2}.
+
+\end{thm}
+
+$B$ is the set of indices $(i,j)$ for which $S_{ij}\cdot G\rightarrow_G 0$ must be checked. It may be seen above that if $lcm(LT(f_i),LT(f_j)) = LT(f_i)LT(f_j)$, i.e. if the conditions of \ref{prop1} hold, then that set of indices is removed from consideration as $S_{ij}\cdot G\rightarrow_G 0$ is then known to be true. If those conditions fail to hold, then next the conditions for \ref{prop2} are checked, and again if those conditions hold, then that set of indices is removed from consideration as again $S_{ij}\cdot G\rightarrow_G 0$ is known to be true. If neither of the conditions of \ref{prop1} or \ref{prop2} hold, then the algorithm above reverts to algorithm \ref{BA} and continues with computing rem$_G(S(f_i,f_j))$.
+
+
+
+
+
+\bibliographystyle{apacite}
+\bibliography{bibliography}
+
+
+
+
+
+
+
+
+\end{document}

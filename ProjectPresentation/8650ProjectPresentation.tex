@@ -1,0 +1,345 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb,enumerate}
+\usepackage{amsthm,stmaryrd}
+\usepackage[all]{xy}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{scrextend}
+\usepackage{apacite}
+\usetikzlibrary{shapes.geometric}
+
+
+%
+% Choose how your presentation looks.
+%
+% For more themes, color themes and font themes, see:
+% http://deic.uab.es/~iblanes/beamer_gallery/index_by_theme.html
+%
+\mode<presentation>
+{
+  \usetheme{Madrid}      % or try Darmstadt, Madrid, Warsaw, ...
+  \usecolortheme{default} % or try albatross, beaver, crane, ...
+  \usefonttheme{default}  % or try serif, structurebold, ...
+  \setbeamertemplate{navigation symbols}{}
+  \setbeamertemplate{caption}[numbered]
+  %\setbeamertemplate{theorems}[numbered]
+} 
+
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+%\usepackage[utf8]{inputenc}
+%\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb,enumerate}
+\usepackage{amsthm,stmaryrd}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{subcaption}
+\usepackage{mathtools}
+\usepackage{fancyvrb}
+\newtheorem{prop}{Proposition}
+\newtheorem{prop1}{Proposition 1}
+\newtheorem{prop2}{Proposition 2}
+\newtheorem{defn}[prop]{Definition}
+\newtheorem{lem}{Lemma}
+\newtheorem{ex}{Example}
+\newtheorem{n}{Note}
+\newtheorem{cor}{Corollary}
+\newtheorem{BA}{Buchberger's Algorithm}
+\newtheorem{gbc1}{GB Criterion 1}
+\newtheorem{gbc2}{GB Criterion 2}
+\newtheorem{gbc3}{GB Criterion 3}
+\newtheorem{thm}{Theorem}
+\newtheorem{rmk}{Remark}
+\newtheorem{PN}{Projective Nullstellensatz}
+\newtheorem{AN}{Recall Affine Nullstellensatz}
+\newtheorem{IncStep}{Inclusion Step}
+\newtheorem{PC}{The Partition Class}
+\usepackage{mathrsfs}
+
+
+\title[Buchberger's Algorithm]{Refinements of the Buchberger Criterion and Improvements of the Buchberger Algorithm}
+\author{Alan R. Hahn}
+\institute{Clemson University}
+\date{April 2018}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+ %Uncomment these lines for an automatically generated outline.
+%\begin{frame}{Outline}
+  %\tableofcontents
+%\end{frame}
+
+%\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\frametitle{Recall}
+
+\begin{gbc1}
+A basis $G = \{g_1,...,g_s\}$ for an ideal $I \subseteq k[x_1,...,x_n]$ is a Gr{\"o}bner basis for I iff for all pairs $i,j$, rem$_G(S(g_i,g_j)) = 0$. 
+\end{gbc1}
+
+\begin{BA}
+Let $0\neq I = \langle f_1,...,f_s\rangle$ be an ideal in $k[x_1,...,x_n]$. A Gr{\"o}bner basis for $I$ may be constructed as follows: 
+\\$G := \{f_1,...,f_s\}$
+\\$\forall f_i,f_j$, if $rem_G(S(f_i,f_j)) = r \neq 0$, then $G = G\cup \{r\}$. 
+Restart and do until all remainders are zero. 
+
+\vspace{3mm} Where $S(f,g) = \frac{lcm(LM(f),LM(g))}{LT(f)}\cdot f - \frac{lcm(LM(f),LM(g))}{LT(g)}\cdot g$.
+\end{BA}
+
+
+
+%\begin{defn}
+%Let $f,g\in k[x_1,...,x_n]$ be nonzero polynomials with multidegree $\alpha$ and $\beta$, respectively. Let $x^{\gamma} = lcm(LM(f_i),LM(f_j))$ where $\gamma_i$ = max$\{\alpha_i,\beta_i\}$. The $\textbf{S-polynomial}$ of $f,g$ is $$S(f,g) = \frac{x^{\gamma}}{LT(f)}\cdot f - \frac{x^{\gamma}}{LT(g)}\cdot g.$$
+%\end{defn}
+
+
+%\begin{rmk}
+%$\bar{f}^G$ is independent of the order of division when $G$ is a Gr{\"o}bner basis. 
+%\end{rmk}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+\begin{defn}
+Fix a monomial order and let $G = \{g_1,...,g_t\} \subseteq k[x_1,...,x_n]$. Given $f\in k[x_1,...,x_n]$, we say that $f$ $\textbf{reduces to zero modulo $G$}$, written $$f\rightarrow_G 0,$$ if $f$ has a \textbf{standard representation} $$f = A_1g_1 + ... + A_tg_t\text{, }A_i\in k[x_1,...,x_n],$$ such that whenever $A_ig_i \neq 0$, then $$\text{multideg}(f)\geq \text{multideg}(A_ig_i).$$
+\end{defn}
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+
+\begin{lem}
+Let $G = (g_1,...,g_t)$ be an ordered set of elements of $k[x_1,...,x_n]$ and fix $f\in k[x_1,...,x_n]$. Then $rem_G(f)=0$ $\implies$ $f\rightarrow_G 0$. 
+%\\The converse is not true in general.
+\end{lem}
+\pause
+
+\begin{gbc2}
+A basis $G = \{g_1, ..., g_t\}$ for an ideal $I$ is a Gr{\"o}bner basis iff $S(g_i,g_j)\rightarrow_G 0$ for all $i\neq j$.
+\end{gbc2}
+\pause
+
+\begin{prop1}
+Given a finite set $G\subseteq k[x_1,...,x_n]$, suppose that for $f,g\in G$, LM$(f)$ and LM$(g)$ are relatively prime. Then $S(f,g) \rightarrow_G 0$.
+\end{prop1}
+%\begin{ex}
+%For $f = xy^2 - x$, $G = (xy+1,y^2-1)$, we may write $$xy^2 - x = 0\cdot(xy+1) + x\cdot(y^2 - 1),$$ but the division algorithm gives $$xy^2-x = y\cdot(xy+1) + 0\cdot(y^2-1) + (-x-y).$$
+%\end{ex}
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+
+
+
+%\begin{proof}
+%Suppose LC$(f)$ = LC$(g)$ = 1, and write $f = $LM$(f) + p$, $g = $LM$(g)+q$. Note lcm(LM$(f)$, LM$(g))$ = LM$(f)\cdot $LM$(g)$. Then 
+%$$S(f,g) = LM(g)\cdot f - LM(f)\cdot g$$ 
+%$$=(g-q)\cdot f - (f-p)\cdot g $$
+%$$=g\cdot f - q\cdot f - f\cdot g + p\cdot g $$
+%$$= p\cdot g - q\cdot f.$$
+%\end{proof}
+
+\begin{ex}
+Let $\{yz+y, x^3+y, z^4+x+y\} = G\subseteq k[x,y,z]$ with grlex order. Note $x^3$ and $z^4$ are relatively prime. Then 
+\\$S(x^3+y, z^4+x+y) =  z^4\cdot (x^3+y) - x^3\cdot (z^4+x+y)$
+\\$= (z^4+x+y-x-y)\cdot (x^3+y) - (x^3+y - y)\cdot (z^4+x+y)$
+\\$= (z^4+x+y)\cdot (x^3+y) - (-x-y)\cdot (x^3+y)  - (x^3+y)\cdot (z^4+x+y) + y\cdot(z^4+x+y)$
+\\$= y\cdot(z^4+x+y) - (-x-y)\cdot (x^3+y)$.
+\end{ex}
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{frame}
+\begin{footnotesize}
+\begin{defn}
+Let $F = (f_1,...,f_s)$. A \textbf{syzygy} on the leading terms $LT(f_1),...,LT(f_s)$ of $F$ is an $s$-tuple of polynomials $S = (h_1,...,h_s)\in (k[x_1,...,x_n])^s$ such that $$\sum_{i=1}^s h_i\cdot LT(f_i) = 0.$$
+Denote by $S(F)$ the subset of $(k[x_1,...,x_n])^s$ consisting of all syzygies on the leading terms of $F$. 
+\end{defn}
+\pause
+\begin{ex}
+Consider $F = (x,x^2+z,y+z)$ with the lex ordering. Then $S = (-x+y,1,-x)$ defines a syzygy in $S(F)$: $$(-x+y)\cdot LT(x) + 1\cdot LT(x^2+z) + -x\cdot LT(y+z) = -x^2 +xy + x^2 -xy = 0.$$
+\end{ex}
+\pause
+\begin{defn}
+For $S = (H_1,...,H_s)\in S(F)$, 
+$$S\cdot F := \sum_{i = 1}^t H_if_i.$$
+\end{defn}
+
+\end{footnotesize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\begin{small}
+%\begin{n}
+%Let $F = (f_1,...,f_s)$, $S = (s_1,...,s_s),T = (d_1,...,d_s)\in S(F)$, and $g\in k[x_1,...,x_n]$. Then 
+%\\$S+T = (s_1+d_1,...,s_s+d_s)\in S(F)$, 
+%\\$g\cdot S = (gs_1,...,gs_s)\in S(F)$.
+%\\That is that $S(F)$ is closed under coordinate wise sums and under coordinate-wise multiplication by polynomials. Furthermore, $S(F)$ has a finite basis, that there is a finite collection of syzygies such that every syzygy in $S(F)$ is a $k[x_1,...,x_n]$ linear combination of the basis elements. 
+%\end{n}
+
+\begin{defn}
+An element $S\in S(F)$ is \textbf{homogeneous of multidegree} $\alpha$, where $\alpha \in \mathbb{Z}_{\geq0}$, provided that $$S = (c_1x^{\alpha(1)}, ..., c_sx^{\alpha(s)}),$$ where $c_i\in k$ and $\alpha(i) + multideg(f_i) = \alpha$ whenever $c_i\neq 0$. 
+\end{defn}
+\pause
+\begin{defn}
+$$S_{ij} : = \frac{lcm(LM(f_i),LM(f_j))}{LT(f_i)}\cdot \textbf{$e_i$} - \frac{lcm(LM(f_i),LM(f_j))}{LT(f_j)}\cdot \textbf{$e_j$}. $$ Note $S_{ij}$ is homogeneous of degree multideg$(lcm(LT(f_i),LT(f_j)))$.
+\end{defn}
+\pause
+
+\begin{ex}
+Consider $G = (x^2y^2+z,xy^2-y,x^2y+yz)$. Then
+\\$S_{1,2} = (1,-x,0)$. 
+\\Note $S_{ij}\cdot G = S(g_i,g_j).$
+\end{ex}
+
+\end{small}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\begin{lem}
+Every element of S(F) can be written uniquely as a sum of homogeneous elements of S(F). 
+\end{lem}
+
+\begin{proof}
+Fix $\alpha \in \mathbb{Z}_{\geq0}$, and let $h_{i\alpha}$ be the term of $h_i$ such that $h_{i\alpha}f_i$ has multidegree $\alpha$, if such term exists. Then $\sum_{i=1}^s h_{i\alpha}LT(f_i) = 0$ as $h_{i\alpha}LT(f_i)$ are the terms of multidegree $\alpha$ in the sum $\sum_{i=1}^s h_{i}LT(f_i) = 0$.
+\\Thus $S_{\alpha} = (h_{1\alpha}, ..., h_{s\alpha})$ is a homogeneous element of $S(F)$ of degree $\alpha$ and $S = \sum_{\alpha}S_{\alpha}$.
+\end{proof}
+\pause
+\begin{prop}
+Given $F = (f_1, ..., f_s)$, every syzygy $S\in S(F)$ can be written as 
+$$S = \sum_{i<j}u_{ij}S_{ij},$$
+where $u_{ij}\in k[x_1,...,x_n]$. 
+\end{prop}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\begin{footnotesize}
+%\begin{thm}
+%A basis $G = (g_1,...,g_t)$ for an ideal $I$ is a Gr{\"o}bner basis iff for every element $S = (H_1, ..., H_t)$ in a homogeneous basis for the syzygies $S(G)$, $S\cdot G = \sum_{i = 1}^t H_ig_i$ can be written $$S\cdot G = \sum_{i = 1}^t H_ig_i = \sum_{i = 1}^tA_ig_i,$$ where the multidegree $\alpha$ of $S$ satisfies $\alpha > multideg(A_ig_i)$ whenever $A_ig_i \neq 0$. 
+%\end{thm}
+%\begin{prop}
+%multideg$(S) >$ multideg$(S\cdot G) \geq$ multideg$(A_ig_i)$.
+%\end{prop}
+\begin{gbc2}[Recall]
+A basis $G = \{g_1, ..., g_t\}$ for an ideal $I$ is a Gr{\"o}bner basis iff $S(g_i,g_j)\rightarrow_G 0$ for all $i\neq j$.
+\end{gbc2}
+\pause
+\begin{gbc3}
+A basis $G = (g_1, ..., g_t)$ for an ideal I is a Gr{\"o}bner basis iff for every element $S = (H_1,...,H_t)$ in a homogeneous basis for the syzygies $S(G)$, $S\cdot G \rightarrow_G 0.$ 
+\end{gbc3}
+\pause
+\begin{prop2}
+Given $G = (g_1,...,g_t)$, suppose that $S\subseteq \{S_{ij}\mid 1\leq i<j\leq t\}$ is a basis of $S(G)$. In addition, suppose we have distinct elements $g_i, g_j, g_l\in G$ such that $LT(g_l)$ divides $lcm(LT(g_i),LT(g_j))$. If $S_{il}, S_{jl}\in S$, then $S\setminus \{S_{ij}\}$ is also a basis of S$(G)$. 
+\end{prop2}
+\pause
+\begin{proof}
+For simplicity, suppose $i<j<l$. Set $x^{\gamma_{ij}} = lcm(LM(g_i),LM(g_j))$, and let $x^{\gamma_{il}}$ and $x^{\gamma_{jl}}$ be defined similarly. Then by assumption, $x^{\gamma_{il}}$, $x^{\gamma_{jl}}$ both divide $x^{\gamma_{ij}}$. It remains to note that $$ S_{ij} = \frac{x^{\gamma_{ij}}}{x^{\gamma_{il}}}S_{il} - \frac{x^{\gamma_{ij}}}{x^{\gamma_{jl}}}S_{jl}.$$
+\end{proof}
+\end{footnotesize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\begin{small}
+\frametitle{Summary of Results}
+\begin{gbc2}[Restated]
+A basis $G = \{g_1, ..., g_t\}$ for an ideal $I$ is a Gr{\"o}bner basis iff $S_{ij}\cdot G = S(g_i,g_j)\rightarrow_G 0$ for all $i\neq j$.
+\end{gbc2}
+
+\begin{prop1}[Restated]
+Given a finite set $G\subseteq k[x_1,...,x_n]$, suppose that for $g_i,g_j\in G$, LM$(g_i)$ and LM$(g_j)$ are relatively prime. Then $S_{ij}\cdot G = S(g_i,g_j) \rightarrow_G 0$.
+\end{prop1}
+
+\begin{gbc3}
+A basis $G = (g_1, ..., g_t)$ for an ideal I is a Gr{\"o}bner basis iff for every element $S = (H_1,...,H_t)$ in a homogeneous basis for the syzygies $S(G)$, $S\cdot G \rightarrow_G 0.$ 
+\end{gbc3}
+
+\begin{prop2}
+Given $G = (g_1,...,g_t)$, suppose that $S\subseteq \{S_{ij}\mid 1\leq i<j\leq t\}$ is a basis of $S(G)$. In addition, suppose we have distinct elements $g_i, g_j, g_l\in G$ such that $LT(g_l)$ divides $lcm(LT(g_i),LT(g_j))$. If $S_{il}, S_{jl}\in S$, then $S\setminus \{S_{ij}\}$ is also a basis of S$(G)$. 
+\end{prop2}
+\end{small}
+
+
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Main Theorem}
+\begin{footnotesize}
+
+Let I = $\langle f_1, ..., f_s\rangle$ be a polynomial ideal. Then a Gr{\"o}bner basis of I can be constructed in a finite number of steps by the following algorithm: 
+\\Input: $F = (f_1, ..., f_s)$
+\\Output: a Gr{\"o}bner basis $G$ for $I = \langle f_1, ..., f_s\rangle$
+\vspace{2mm}
+\\$B := \{(i,j)\mid 1\leq i < j\leq s\}$
+\\$G:= F$
+\\$t := s$
+\\While $B\neq \emptyset$ Do
+\\\hspace{6mm} Select $(i,j)\in B$
+\\\hspace{6mm} If $lcm(LT(f_i),LT(f_j)) \neq LT(f_i)LT(f_j)$ and Criterion($f_i,f_j,B$) = false Then
+\\\hspace{12mm} $r :=$ rem$_{G}(S(f_i,f_j))$
+\\\hspace{12mm} If $r\neq 0$ Then 
+\\\hspace{18mm} $t := t+1; f_t := r$
+\\\hspace{18mm} $G := G \cup \{f_t \}$
+\\\hspace{18mm} $B := B \cup \{(i,t)\mid1\leq i \leq t-1\}$
+\\\hspace{6mm} $B := B\setminus \{(i,j)\}$
+\\Return $G$
+\\\vspace{2mm} Criterion($f_i,f_j,B$) is true provided that there is some $l\notin \{i,j\}$ for which the pairs $(i,l)$ and $(j,l)$ are not in B and $LT(f_l)$ divides $lcm(LT(f_i),LT(f_j))$. (Based on Proposition 2) 
+
+
+\end{footnotesize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\end{document}

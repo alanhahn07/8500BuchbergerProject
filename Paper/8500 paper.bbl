@@ -1,0 +1,32 @@
+\begin{thebibliography}{}
+
+\bibitem [\protect \citeauthoryear {%
+Cox%
+, Little%
+\BCBL {}\ \BBA {} O'Shea%
+}{%
+Cox%
+\ \protect \BOthers {.}}{%
+{\protect \APACyear {2015}}%
+}]{%
+OsheaIVA}
+\APACinsertmetastar {%
+OsheaIVA}%
+\begin{APACrefauthors}%
+Cox, D.%
+, Little, J.%
+\BCBL {}\ \BBA {} O'Shea, D.%
+\end{APACrefauthors}%
+\unskip\
+\newblock
+\APACrefYear{2015}.
+\newblock
+\APACrefbtitle {Ideals, Varieties, and Algorithms: an Introduction to
+  Computational Algebraic Geometry and Commutative Algebra} {Ideals, varieties,
+  and algorithms: an introduction to computational algebraic geometry and
+  commutative algebra}.
+\newblock
+\APACaddressPublisher{}{Springer}.
+\PrintBackRefs{\CurrentBib}
+
+\end{thebibliography}
