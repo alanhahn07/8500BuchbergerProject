@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  31 AUG 2022 15:14
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  31 AUG 2022 15:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**8650ProjectPresentation.tex
-(./8650ProjectPresentation.tex
+**8500ProjectPresentation.tex
+(./8500ProjectPresentation.tex
 LaTeX2e <2015/01/01>
 Babel <3.9l> and hyphenation patterns for 79 languages loaded.
 (/usr/local/texlive/2015/texmf-dist/tex/latex/beamer/beamer.cls
@@ -1117,8 +1117,8 @@ Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix
 Package: mathrsfs 1996/01/01 Math RSFS package v1.0 (jk)
 \symrsfs=\mathgroup7
 )
-No file 8650ProjectPresentation.aux.
-\openout1 = `8650ProjectPresentation.aux'.
+No file 8500ProjectPresentation.aux.
+\openout1 = `8500ProjectPresentation.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 73.
 LaTeX Font Info:    ... okay on input line 73.
@@ -1212,7 +1212,7 @@ LaTeX Info: Redefining \ref on input line 73.
 LaTeX Info: Redefining \pageref on input line 73.
 LaTeX Info: Redefining \nameref on input line 73.
 \@outlinefile=\write7
-\openout7 = `8650ProjectPresentation.out'.
+\openout7 = `8500ProjectPresentation.out'.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 73.
@@ -1330,7 +1330,7 @@ File: ucsencs.def 2011/01/21 Fixes to fontencodings LGR, T3
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 
-No file 8650ProjectPresentation.nav.
+No file 8500ProjectPresentation.nav.
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
 (Font)              size <5> substituted on input line 77.
@@ -1390,27 +1390,27 @@ Overfull \vbox (3.6326pt too high) detected at line 307
 
 ]
 \tf@nav=\write8
-\openout8 = `8650ProjectPresentation.nav'.
+\openout8 = `8500ProjectPresentation.nav'.
 
 \tf@toc=\write9
-\openout9 = `8650ProjectPresentation.toc'.
+\openout9 = `8500ProjectPresentation.toc'.
 
 \tf@snm=\write10
-\openout10 = `8650ProjectPresentation.snm'.
+\openout10 = `8500ProjectPresentation.snm'.
 
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 345.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 345.
- (./8650ProjectPresentation.aux)
+ (./8500ProjectPresentation.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 345.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 345.
 
 
-Package rerunfilecheck Warning: File `8650ProjectPresentation.out' has changed.
+Package rerunfilecheck Warning: File `8500ProjectPresentation.out' has changed.
 
 (rerunfilecheck)                Rerun to get outlines right
 (rerunfilecheck)                or use package `bookmark'.
 
-Package rerunfilecheck Info: Checksums for `8650ProjectPresentation.out':
+Package rerunfilecheck Info: Checksums for `8500ProjectPresentation.out':
 (rerunfilecheck)             Before: <no file>
 (rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
 
@@ -1450,7 +1450,7 @@ exlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/tex
 live/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texli
 ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive
 /2015/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on 8650ProjectPresentation.pdf (21 pages, 234635 bytes).
+Output written on 8500ProjectPresentation.pdf (21 pages, 234635 bytes).
 PDF statistics:
  252 PDF objects out of 1000 (max. 8388607)
  196 compressed objects within 2 object streams
